@@ -1,8 +1,8 @@
 name: MLOps-demo
 on:
-  push:
-    paths:
-      - "front-end/**"
+  pull_request:
+    branches:
+    - master
 jobs:
   run:
     runs-on: ubuntu-latest
