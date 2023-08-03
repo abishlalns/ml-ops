@@ -8,6 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Train model
+      - name: testing backend
         run: |
           python back-end/test.py
