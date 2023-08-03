@@ -1,15 +1,13 @@
 name: MLOps-demo
-on: [push]
+on:
+  push:
+    paths:
+      - "front-end"
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-      - uses: iterative/setup-cml@v1
       - name: Train model
-        env:
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          pip install -r requirements.txt
-          python main.py
+          python front-end/test.py
