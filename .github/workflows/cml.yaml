@@ -2,7 +2,7 @@ name: MLOps-demo
 on:
   push:
     paths:
-      - "front-end"
+      - "front-end/**"
 jobs:
   run:
     runs-on: ubuntu-latest
