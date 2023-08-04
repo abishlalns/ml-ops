@@ -1,1 +1,1 @@
-print('front end file running successfully')
+print('front end file running successfullys')
