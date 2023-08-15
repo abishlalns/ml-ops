@@ -1,8 +1,6 @@
 name: MLOps-demo
 on:
-  pull_request:
-    branches:
-    - master
+  push
 jobs:
   run:
     runs-on: ubuntu-latest
