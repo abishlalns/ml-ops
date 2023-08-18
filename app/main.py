@@ -73,7 +73,7 @@ def generate_gherkin_code(
 
 @app.get("/v1/health")
 def check_health():
-    """ method to check the health of the server"""
+    """ method to check the health of the server """
     health = {"isAlive": True}
     return health
 
