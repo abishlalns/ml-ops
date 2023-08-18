@@ -4,6 +4,24 @@ on:
   push
 
 jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Testing Gherkin generation service
+        run: |
+          # installing the requirements file
+          cd prototypes/gherkin_generation_service
+          pip install -r requirements.txt
+
+          # analyzing the python code
+          black main.py
+          black main_test.py
+          flake8 main.py
+          flake8 main_test.py
+
+          # automated testing the python file
+          pytest main_test.py
   build:
     runs-on: ubuntu-latest
     steps:
