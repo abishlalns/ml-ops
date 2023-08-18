@@ -18,6 +18,9 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -
         name: Build and push
-        run: |
-          docker build -t abishlal/demo:latest -f Dockerfile .
-          docker-compose -f docker-compose.yml push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/gherkin-generation-service:latest
