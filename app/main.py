@@ -1,30 +1,32 @@
 """This file contains the api function for gherkin generation"""
 
 from enum import Enum
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from pydantic import BaseModel, validator
 
-from .utils.generate_gherkin import gherkin_from_ml
+from utils.generate_gherkin import gherkin_from_ml
 
 
 class GherkinGenerationRequestBody(BaseModel):
     """This is the schema for the gherkin generation request body"""
+
     domain: str
     requestId: int
     requirementText: str
 
     @validator("requestId")
     def check_request_id(cls, value):
-        """ validating the requestID"""
+        """validating the requestID"""
         if value <= 0:
             raise ValueError("requestId must be a positive integer")
         return value
 
 
 class GherkinGenerationSuccessResponse(BaseModel):
-    """schema for the success response of the gherkin generation """
+    """schema for the success response of the gherkin generation"""
+
     status: str
     statusCode: int
     requestId: int
@@ -32,7 +34,8 @@ class GherkinGenerationSuccessResponse(BaseModel):
 
 
 class ErrorResponseModel(BaseModel):
-    """ This is the error schema for the error responses"""
+    """This is the error schema for the error responses"""
+
     status: str
     statusCode: int
     message: str
@@ -40,6 +43,7 @@ class ErrorResponseModel(BaseModel):
 
 class ModelMetadataResponse(BaseModel):
     """This is the schema for the response of the metadata"""
+
     modelName: str
     version: str
     description: str
@@ -49,6 +53,7 @@ class ModelMetadataResponse(BaseModel):
 
 class StatusCode(Enum):
     """Enum for the various status codes"""
+
     SUCCESS = 200
     UNPROCESSABLE_ENTITY = 422
     NOT_FOUND = 404
@@ -73,13 +78,13 @@ def generate_gherkin_code(
 
 @app.get("/v1/health")
 def check_health():
-    """ method to check the health of the server """
+    """method to check the health of the server"""
     health = {"isAlive": True}
     return health
 
 
 @app.get("/{version}/model")
-async def get_model_metadata(version:str):
+async def get_model_metadata(version: str):
     """Method will return the metadata about the ML model"""
 
     return ModelMetadataResponse(
@@ -94,35 +99,38 @@ async def get_model_metadata(version:str):
 
 @app.exception_handler(RequestValidationError)
 def unprocessable_entity_exception_handler(response, exception):
-    """ Exception handler for error code 422 - unprocessable entity"""
+    """Exception handler for error code 422 - unprocessable entity"""
     error_response = ErrorResponseModel(
         status="FAIL",
         statusCode=StatusCode.UNPROCESSABLE_ENTITY.value,
-        message=exception.errors()[0]['msg'])
+        message=exception.errors()[0]["msg"],
+    )
     return JSONResponse(
-        content=dict(error_response),
-        status_code=StatusCode.UNPROCESSABLE_ENTITY.value)
+        content=dict(error_response), status_code=StatusCode.UNPROCESSABLE_ENTITY.value
+    )
 
 
 @app.exception_handler(404)
 def not_found_exception_handler(response, exception):
-    """ Exception handler for error code 404 - Endpoint not found"""
+    """Exception handler for error code 404 - Endpoint not found"""
     error_response = ErrorResponseModel(
         status="FAIL",
         statusCode=StatusCode.NOT_FOUND.value,
-        message="Requested Endpoint Not Found")
+        message="Requested Endpoint Not Found",
+    )
     return JSONResponse(
-        content=dict(error_response),
-        status_code=StatusCode.NOT_FOUND.value)
+        content=dict(error_response), status_code=StatusCode.NOT_FOUND.value
+    )
 
 
 @app.exception_handler(500)
 def internal_server_error_exception_handler(response, exception):
-    """ Exception handler for error code 500 - internal server error"""
+    """Exception handler for error code 500 - internal server error"""
     error_response = ErrorResponseModel(
         status="FAIL",
         statusCode=StatusCode.INTERNAL_SERVER_ERROR.value,
-        message="Internal Server Error")
+        message="Internal Server Error",
+    )
     return JSONResponse(
-        content=dict(error_response),
-        status_code=StatusCode.INTERNAL_SERVER_ERROR.value)
+        content=dict(error_response), status_code=StatusCode.INTERNAL_SERVER_ERROR.value
+    )
